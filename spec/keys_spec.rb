@@ -45,6 +45,19 @@ module FakeRedis
       @client.exists("key2").should be == false
     end
 
+    describe '#setnx' do
+
+      it "should return true when setting on keys that do not yet exist" do
+        @client.setnx("key1", "1").should == true
+      end
+
+      it "should return false when attempting to set expires on a key that does exist" do
+        @client.set("key1", "1")
+        @client.setnx("key1", 1).should == false
+      end
+
+    end
+
     it "should set a key's time to live in seconds" do
       @client.set("key1", "1")
       @client.expire("key1", 1)

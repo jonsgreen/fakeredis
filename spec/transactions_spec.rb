@@ -24,11 +24,13 @@ module FakeRedis
         transaction = @client.multi do |multi|
           multi.set("key1", "1")
           multi.set("key2", "2")
+          multi.setnx("key3", "1")
+          multi.setnx("key3", "2")
           multi.expire("key1", 123)
           multi.mget("key1", "key2")
         end
 
-        transaction.should be == ["OK", "OK", true, ["1", "2"]]
+        transaction.should be == ["OK", "OK", true, false, true, ["1", "2"]]
       end
     end
 
